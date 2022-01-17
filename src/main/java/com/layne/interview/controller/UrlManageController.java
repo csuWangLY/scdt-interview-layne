@@ -9,9 +9,7 @@ import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 /**
  * Url管理向外提供的controller服务
@@ -52,10 +50,41 @@ public class UrlManageController {
 
         try {
             // 检查入参
-            checkStoreRequest(longUrl);
+            checkRequest(longUrl);
 
             // 调用service进行业务逻辑
             urlManageService.storeUrl(longUrl);
+
+        } catch (Exception e) {
+
+            dealWithException(result, e);
+
+        }
+
+        return result;
+    }
+
+    /**
+     * 向外提供的获取url接口，返回长url
+     *
+     * @param shortUrl 短url
+     * @return 长url
+     */
+    @GetMapping("get/{shortUrl}")
+    public CommonResult<String> get(@PathVariable String shortUrl) {
+
+        // 这里还可以给每个请求加一个唯一的sequenceNo以区分请求
+        LOGGER.info("url get request accepted, url = {}", shortUrl);
+
+        // 构建结果
+        CommonResult<String> result = new CommonResult<>();
+
+        try {
+            // 检查入参
+            checkRequest(shortUrl);
+
+            // 调用service进行业务逻辑
+            urlManageService.getUrl(shortUrl);
 
         } catch (Exception e) {
 
@@ -93,13 +122,13 @@ public class UrlManageController {
      *
      * @param longUrl url
      */
-    private void checkStoreRequest(String longUrl) {
+    private void checkRequest(String longUrl) {
         // 对请求字段进行校验
         if (StringUtils.isBlank(longUrl)) {
 
-            LOGGER.info("url store with bad request, url = {}", longUrl);
+            LOGGER.info("urlManage with bad request, url = {}", longUrl);
 
-            throw new ManageException(ErrorCodeEnum.BAD_REQUEST, "bad request with store");
+            throw new ManageException(ErrorCodeEnum.BAD_REQUEST, "bad request with urlManage");
 
         }
     }
