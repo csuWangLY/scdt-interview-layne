@@ -11,6 +11,8 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
+
 /**
  * Url管理向外提供的controller服务
  *
@@ -36,14 +38,14 @@ public class UrlManageController {
     /**
      * 向外提供的存储url接口，返回短url
      *
-     * @param longUrl
-     * @return
+     * @param longUrl 长url
+     * @return 短url
      */
     @PostMapping("store")
     public CommonResult<String> store(String longUrl) {
 
         // 这里还可以给每个请求加一个唯一的sequenceNo以区分请求
-        LOGGER.info("url store request accepted, url = {}", longUrl);
+        LOGGER.info("收到长域名存储请求, longUrl = {}", longUrl);
 
         // 构建结果
         CommonResult<String> result = new CommonResult<>();
@@ -73,8 +75,8 @@ public class UrlManageController {
     @GetMapping("get/{shortUrl}")
     public CommonResult<String> get(@PathVariable String shortUrl) {
 
-        // 这里还可以给每个请求加一个唯一的sequenceNo以区分请求
-        LOGGER.info("url get request accepted, url = {}", shortUrl);
+        // 这里还可以给每个请求加一个唯一的sequenceNo以在日志里区分请求
+        LOGGER.info("收到长域名查询请求,输入 shortUrl = {}", shortUrl);
 
         // 构建结果
         CommonResult<String> result = new CommonResult<>();
@@ -101,7 +103,7 @@ public class UrlManageController {
      * @param result
      */
     private void dealWithException(CommonResult<String> result, Exception e) {
-        LOGGER.error("exception occured while process");
+        LOGGER.error("请求处理中出现异常");
 
         // 设置为失败
         result.setSuccess(false);
@@ -126,9 +128,9 @@ public class UrlManageController {
         // 对请求字段进行校验
         if (StringUtils.isBlank(longUrl)) {
 
-            LOGGER.info("urlManage with bad request, url = {}", longUrl);
+            LOGGER.info("请求参数有误, longUrl = {}", longUrl);
 
-            throw new ManageException(ErrorCodeEnum.BAD_REQUEST, "bad request with urlManage");
+            throw new ManageException(ErrorCodeEnum.BAD_REQUEST, "请求参数有误");
 
         }
     }

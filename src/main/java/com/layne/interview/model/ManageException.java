@@ -12,6 +12,8 @@ import lombok.Data;
 @Data
 public class ManageException extends RuntimeException {
 
+    private static final long serialVersionUID = 6303198541197108135L;
+
     /**
      * 错误码
      */
