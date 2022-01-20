@@ -40,12 +40,7 @@ public class UrlManageServiceImpl implements UrlManageService {
     /**
      * 自增序列号
      */
-    private final AtomicLong sequence = new AtomicLong(0);
-
-    /**
-     * 短域名最大长度
-     */
-    private static final int MAX_SHORT_URL_LENGTH = 8;
+    private final static AtomicLong sequence = new AtomicLong(0);
 
     /**
      * 序列号间隔
@@ -63,18 +58,17 @@ public class UrlManageServiceImpl implements UrlManageService {
 
         String shortUrl;
 
-        if (urlString.length() <= MAX_SHORT_URL_LENGTH) {
-            // 长url长度已经到达短url长度区间时，直接用自己当作短url
-            shortUrl = urlString;
-        } else {
-            // 将长url进行缩短
-            shortUrl = DigestUtil.encodeHex(urlString.getBytes(StandardCharsets.UTF_8));
-        }
+        // 将长url进行缩短，获取短url
+        shortUrl = DigestUtil.encodeHex(urlString);
+
 
         // 兜底策略：判断生成的短域名是否存在，已存在则直接用唯一序列号
         if (urlMap.containsKey(shortUrl)) {
             shortUrl = String.valueOf(sequence.addAndGet(SEQUENCE_SPLIT));
         }
+
+        // 放入map
+        urlMap.put(shortUrl, urlString);
 
         LOGGER.info("长域名存储完成，longUrl = {} , shortUrl = {}", urlString, shortUrl);
 
@@ -89,7 +83,7 @@ public class UrlManageServiceImpl implements UrlManageService {
         // 判断查询结果
         if (StringUtils.isBlank(longUrl)) {
             LOGGER.error("查询请求输入的短域名无对应长域名数据, shortUrl = {}", shortUrl);
-            throw new ManageException(ErrorCodeEnum.INTERNAL_ERROR, "系统中无对应此短域名的长域名数据");
+            throw new ManageException(ErrorCodeEnum.REQUEST_DATA_NOT_EXIST, "系统中无对应此短域名的长域名数据");
         }
 
         return longUrl;

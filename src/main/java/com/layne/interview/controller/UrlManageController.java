@@ -41,8 +41,8 @@ public class UrlManageController {
      * @param longUrl 长url
      * @return 短url
      */
-    @PostMapping("store")
-    public CommonResult<String> store(String longUrl) {
+    @GetMapping("store/{longUrl}")
+    public CommonResult<String> store(@PathVariable String longUrl) {
 
         // 这里还可以给每个请求加一个唯一的sequenceNo以区分请求
         LOGGER.info("收到长域名存储请求, longUrl = {}", longUrl);
@@ -55,7 +55,9 @@ public class UrlManageController {
             checkRequest(longUrl);
 
             // 调用service进行业务逻辑
-            urlManageService.storeUrl(longUrl);
+            result.setObj(urlManageService.storeUrl(longUrl));
+
+            result.setSuccess(true);
 
         } catch (Exception e) {
 
@@ -86,7 +88,9 @@ public class UrlManageController {
             checkRequest(shortUrl);
 
             // 调用service进行业务逻辑
-            urlManageService.getUrl(shortUrl);
+            result.setObj(urlManageService.getUrl(shortUrl));
+
+            result.setSuccess(true);
 
         } catch (Exception e) {
 
@@ -100,13 +104,14 @@ public class UrlManageController {
     /**
      * 处理异常
      *
-     * @param result
+     * @param result 結果
      */
     private void dealWithException(CommonResult<String> result, Exception e) {
         LOGGER.error("请求处理中出现异常");
 
         // 设置为失败
         result.setSuccess(false);
+        result.setException(e);
 
         if (e instanceof ManageException) {
 

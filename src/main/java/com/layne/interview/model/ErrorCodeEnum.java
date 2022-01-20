@@ -14,6 +14,8 @@ public enum ErrorCodeEnum {
     BAD_REQUEST("BAD_REQUEST", "入参请求错误"),
 
     INTERNAL_ERROR("INTERNAL_ERROR", "系统内部错误"),
+
+    REQUEST_DATA_NOT_EXIST("REQUEST_DATA_NOT_EXIST", "不存在请求的数据"),
     ;
 
     /**
