@@ -15,7 +15,7 @@ import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.util.ReflectionTestUtils;
 
 @RunWith(SpringRunner.class)
-@SpringBootTest(classes = {InterviewApplication.class})
+@SpringBootTest
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
 public class UrlManageControllerTest {
 

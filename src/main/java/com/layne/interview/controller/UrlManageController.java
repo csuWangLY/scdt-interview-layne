@@ -127,13 +127,13 @@ public class UrlManageController {
     /**
      * 检查入参
      *
-     * @param longUrl url
+     * @param urlString url
      */
-    private void checkRequest(String longUrl) {
+    private void checkRequest(String urlString) {
         // 对请求字段进行校验
-        if (StringUtils.isBlank(longUrl)) {
+        if (StringUtils.isBlank(urlString)) {
 
-            LOGGER.info("请求参数有误, longUrl = {}", longUrl);
+            LOGGER.info("请求参数有误, longUrl = {}", urlString);
 
             throw new ManageException(ErrorCodeEnum.BAD_REQUEST, "请求参数有误");
 

@@ -24,23 +24,6 @@ public class ManageException extends RuntimeException {
      */
     private String errorMsg;
 
-
-    private ManageException() {
-        // do nothing
-    }
-
-    /**
-     * 异常构造函数
-     *
-     * @param errorCode 错误码
-     * @param errorMsg 错误信息
-     * @param throwable 原始异常
-     */
-    public ManageException(ErrorCodeEnum errorCode, String errorMsg, Throwable throwable) {
-        super(errorMsg, throwable);
-        this.errorCode = errorCode;
-    }
-
     /**
      * 异常构造函数
      *
